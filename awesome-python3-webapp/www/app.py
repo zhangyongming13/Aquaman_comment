@@ -6,10 +6,11 @@ import asyncio, os, json, time
 from aiohttp import web
 
 
-def index(request):  # 返回web参数
+def index(request):  # 返回web参数，content_type设置文件的参数
     return web.Response(body='<h1>Awesome</h1>'.encode('utf-8'), content_type='text/html')
 
 
+# asyncio异步结构
 @asyncio.coroutine
 def init(loop):
     app = web.Application()
