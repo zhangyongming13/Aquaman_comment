@@ -3,12 +3,10 @@
 import logging; logging.basicConfig(level=logging.INFO)
 
 import asyncio, os, json, time
-from datetime import datetime
-
 from aiohttp import web
 
 
-def index(request):
+def index(request):  # 返回web参数
     return web.Response(body='<h1>Awesome</h1>'.encode('utf-8'), content_type='text/html')
 
 
