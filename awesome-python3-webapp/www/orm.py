@@ -57,6 +57,7 @@ async def execute(sql, args, autocommit=True):
             raise
         return affected
 
+
 def create_args_string(num):
     L = []
     for n in range(num):
