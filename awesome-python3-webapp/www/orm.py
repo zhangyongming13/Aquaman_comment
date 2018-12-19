@@ -42,21 +42,22 @@ async def select(sql, args, size=None):  # size为select的条数
         return rs
 
 
+# insert，delete，update操作
 async def execute(sql, args, autocommit=True):
     log(sql)
     async with __pool.get() as conn:
-        if not autocommit:
+        if not autocommit:  # 没有自动开1启事务的话就begin手动开启事务
             await conn.begin()
         try:
             async with conn.cursor(aiomysql.DictCursor) as cur:
                 await cur.execute(sql.replace('?', '%s'), args)
                 affected = cur.rowcount
             if not autocommit:
-                await conn.commit()
+                await conn.commit()  # 手动提交事务
         except BaseException as e:
-            if not autocommit:
+            if not autocommit:  # 如果没有自动提交事务则使用rollback进行数据库回滚
                 await conn.rollback()
-            raise
+            raise e
         return affected
 
 
