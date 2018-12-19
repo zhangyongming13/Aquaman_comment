@@ -26,13 +26,15 @@ async def create_pool(loop, **kw):
     )
 
 
-async def select(sql, args, size=None):
+async def select(sql, args, size=None):  # size为select的条数
     log(sql, args)
     global __pool
-    async with __pool.get() as conn:
-        async with conn.cursor(aiomysql.DictCursor) as cur:
+    async with __pool.get() as conn:  # 从地址池中获取连接conn
+        async with conn.cursor(aiomysql.DictCursor) as cur:  # 获取cur
+            # await用在异步async函数中，表示等待异步完成才进行后续的操作
+            # 使用参数替换而不是字符串拼接的方法可以一定程度防止SQL注入攻击
             await cur.execute(sql.replace('?', '%s'), args or ())
-            if size:
+            if size:  # 如果设置了条数就按条数进行select
                 rs = await cur.fetchmany(size)
             else:
                 rs = await cur.fetchall()
