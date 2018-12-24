@@ -19,7 +19,7 @@ header = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/53
 def get_data(html):
     soup = BeautifulSoup(html, 'lxml')
     comment_list = comment(html)
-    next_page = soup.select('#paginator > a')[2].get('href')
+    next_page = soup.select('#paginator > a')[2].get('href')  # 表示根据tag的id是paginator进行检查
     date_node = soup.select('..comment-time')
     return comment_list, next_page, date_node
 
@@ -46,12 +46,6 @@ if __name__ == '__main__':
     for line in f_cookies.read().split(';'):
         name, value = line.strip().split('=', 1)
         cookies[name] = value
-
-    # html = requests.get(absolute_url, cookies = cookies, headers = header).content
-    # comment_list = []
-    # comment_list, next_page, date_node = get_data(html,)
-    # soup = BeautifulSoup(html, 'lxml')
-    # comment_list = []
     next_page = '?start=20&limit=20&sort=new_score&status=P&percent_type='
     while(next_page != []):
         print(absolute + next_page)
@@ -59,24 +53,8 @@ if __name__ == '__main__':
         html = requests.get(zhang, cookies = cookies, headers = header).content
         soup = BeautifulSoup(html, 'lxml')
         comment_list, next_page, date_node = get_data(html,)
-        # print(comment_list)
-        # print(next_page)
-        # print(date_node)
         with open('comment.txt', 'a', encoding = 'utf-8')as f:
             for node in comment_list:
-                # print(node)
-                # comment = node.get_text().strip().replace("\n", "")
-                # print(comment)
                 yong = list(node)
-                # for date in date_node:
-                    # ming = list(date)
-                    # print(ming[0])
-                    # time.sleep(3)
-                    # f.writelines(yong[0] + ming[0] + u'\n')
-                    # print(yong[0])
-                # for date in date_node:
-                #     date = date.get_text().strip()
-                # print(list(yong[0])[0])
-                # print(list(yong[1])[0].strip())
                 f.writelines(list(yong[0])[0] + list(yong[1])[0].strip() + u'\n')
         time.sleep(1 + float(random.randint(1, 100)) / 20)
